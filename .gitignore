@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (large files — keep folder structure only)
+data/raw_videos/*
+data/poses/*
+data/processed/*
+!data/**/.gitkeep
+
+# Models (large binaries)
+models/*
+!models/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
