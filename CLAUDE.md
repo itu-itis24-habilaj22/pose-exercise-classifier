@@ -23,5 +23,13 @@ to confirm before moving on, and let them run git commands themselves.
 - Steps 1–9 done: git, GitHub repo, Python 3.12 venv, requirements, pose model, pose demo pushed.
 - Step 10 done: angle + rep counter code written, tests passing. NOT yet committed.
 - Step 11 done: live squat test counted 5/5 (knee range 31–170 deg); thresholds 100/160 kept.
-- Next: commit step 10/11 work, then build the exercise classifier (collect labeled videos,
+- Step 12 done: step 10/11 work committed and pushed (4901a6c).
+- The user follows a roadmap (GRADUATION_PROJECT_ROADMAP.md): only do the current phase, don't
+  build ahead. Roadmap says to use public datasets before recording our own videos.
+- Roadmap status: Phase 1.1, 1.2 and 1.4 step 1 done; rep counter (Phase 2.1) done early.
+  1.3 done: `src/opencv_image_basics.py` (resize, gray, Canny) and `src/opencv_video_basics.py`
+  (frame count, FPS, pause) both tested by the user on webcam and on files in `data/samples/`
+  (git-ignored). Not yet committed.
+  Remaining Phase 1: 1.4 step 2 (keypoints → CSV), 1.5 public dataset.
+- Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).
