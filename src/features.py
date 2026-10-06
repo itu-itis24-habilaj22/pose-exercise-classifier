@@ -46,3 +46,30 @@ def joint_angle(world_landmarks, image_landmarks, joint):
             angle = calculate_angle(*[(p.x, p.y, p.z) for p in points])
             best = (angle, visibility)
     return best
+
+
+def normalize_keypoints(keypoints, aspect_ratio=1.0):
+    """Make poses comparable no matter where the person stands or how far away they are.
+
+    keypoints: array of shape (frames, 33, 4) with x, y, z, visibility, where x and y
+    are fractions of the image width and height (as saved by extract_poses.py).
+    aspect_ratio: image width / height. x is a fraction of the width but y of the
+    height, so on a non-square video they use different units; multiplying x by the
+    aspect ratio puts both in "image heights" (z uses the same scale as x).
+
+    Each frame is then centered on the middle of the hips and divided by the torso
+    length (hips to shoulders), so the hip center is at (0, 0, 0) and the shoulders
+    are about 1 unit away. Visibility is kept unchanged.
+    """
+    points = keypoints[..., :3].copy()
+    points[..., 0] *= aspect_ratio
+    points[..., 2] *= aspect_ratio
+
+    hip_center = (points[:, LEFT_HIP] + points[:, RIGHT_HIP]) / 2
+    shoulder_center = (points[:, LEFT_SHOULDER] + points[:, RIGHT_SHOULDER]) / 2
+    # Torso length in the image plane only: z is a rough estimate.
+    torso = np.linalg.norm((shoulder_center - hip_center)[:, :2], axis=1)
+    torso[torso == 0] = np.nan  # avoid dividing by zero on a broken detection
+
+    normalized = (points - hip_center[:, None, :]) / torso[:, None, None]
+    return np.concatenate([normalized, keypoints[..., 3:]], axis=-1)

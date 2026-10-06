@@ -29,7 +29,13 @@ to confirm before moving on, and let them run git commands themselves.
 - Roadmap status: Phase 1.1, 1.2 and 1.4 step 1 done; rep counter (Phase 2.1) done early.
   1.3 done: `src/opencv_image_basics.py` (resize, gray, Canny) and `src/opencv_video_basics.py`
   (frame count, FPS, pause) both tested by the user on webcam and on files in `data/samples/`
-  (git-ignored). Not yet committed.
-  Remaining Phase 1: 1.4 step 2 (keypoints → CSV), 1.5 public dataset.
+  (git-ignored). Committed (432c640).
+  1.4 step 2 part 1 done: `src/extract_poses.py` (video → (frames,33,4) array → CSV in
+  `data/poses/`), user ran it on data/samples/video.mp4: 705/705 frames detected. Not committed.
+  1.4 step 2 part 2 written: `normalize_keypoints` in features.py (aspect fix, hip-centered,
+  torso-scaled; tests in tests/test_normalize.py), CSV now has image_width/height columns,
+  `src/plot_poses.py` plots raw vs normalized y. User ran both: plot shows 5 clear wrist reps.
+  Phase 1.4 complete. Not yet committed.
+  Remaining Phase 1: 1.5 public dataset.
 - Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).
