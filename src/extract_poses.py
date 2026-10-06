@@ -3,6 +3,7 @@
 Usage (from the project root, with .venv activated):
     python src/extract_poses.py data/samples/video.mp4
     python src/extract_poses.py data/samples/video.mp4 --output data/poses/my_video.csv
+    python src/extract_poses.py data/raw_videos     # every video in data/raw_videos/<exercise>/
 
 Each CSV row is one video frame. For each of the 33 MediaPipe landmarks there
 are 4 columns: x and y (position as a fraction of the image width/height,
@@ -20,6 +21,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+from explore_videos import find_videos
 from pose_demo import DEFAULT_MODEL, PROJECT_ROOT, create_landmarker
 
 # The 33 MediaPipe Pose landmarks, in index order (0 = nose, ..., 32 = right_foot_index).
@@ -51,7 +53,8 @@ def extract_keypoints(video_path, model_path=DEFAULT_MODEL):
 
     frames = []
     with create_landmarker(model_path) as landmarker:
-        for frame_index in tqdm(range(total), desc="Extracting", unit="frame"):
+        for frame_index in tqdm(range(total), desc="Extracting", unit="frame",
+                                leave=False):
             ok, frame = cap.read()
             if not ok:  # the frame count in the file header can be slightly off
                 break
@@ -91,28 +94,53 @@ def load_keypoints(csv_path):
     return table, keypoints
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Extract pose keypoints to CSV")
-    parser.add_argument("video", type=Path, help="path to a video file")
-    parser.add_argument("--output", type=Path,
-                        help="CSV path (default: data/poses/<video name>.csv)")
-    parser.add_argument("--model", default=DEFAULT_MODEL, help="path to the .task model")
-    args = parser.parse_args()
-
-    if not args.video.is_file():
-        raise SystemExit(f"Video file not found: {args.video}")
-    output = args.output or PROJECT_ROOT / "data" / "poses" / f"{args.video.stem}.csv"
-
-    keypoints, fps, size = extract_keypoints(args.video, args.model)
+def save_poses(video, output, model_path):
+    """Extract one video to a CSV; returns (frames, frames with a person detected)."""
+    keypoints, fps, size = extract_keypoints(video, model_path)
     table = keypoints_to_table(keypoints, fps, size)
     output.parent.mkdir(parents=True, exist_ok=True)
     table.to_csv(output, index=False, float_format="%.5f")
+    return len(table), int(table["nose_x"].notna().sum())
 
-    detected = int(table["nose_x"].notna().sum())
-    print(f"Numpy array shape: {keypoints.shape}  (frames, landmarks, values)")
-    print(f"Person detected in {detected}/{len(table)} frames "
-          f"({100 * detected / max(len(table), 1):.0f}%)")
-    print(f"Saved {len(table)} rows x {table.shape[1]} columns to {output}")
+
+def main():
+    parser = argparse.ArgumentParser(description="Extract pose keypoints to CSV")
+    parser.add_argument("video", type=Path,
+                        help="a video file, or a folder with one subfolder per exercise")
+    parser.add_argument("--output", type=Path,
+                        help="CSV path for one video (default: data/poses/<video name>.csv), "
+                             "or output folder for a folder (default: data/poses)")
+    parser.add_argument("--model", default=DEFAULT_MODEL, help="path to the .task model")
+    args = parser.parse_args()
+    poses_dir = PROJECT_ROOT / "data" / "poses"
+
+    if args.video.is_file():
+        output = args.output or poses_dir / f"{args.video.stem}.csv"
+        frames, detected = save_poses(args.video, output, args.model)
+        print(f"Person detected in {detected}/{frames} frames "
+              f"({100 * detected / max(frames, 1):.0f}%)")
+        print(f"Saved {frames} rows to {output}")
+        return
+
+    if not args.video.is_dir():
+        raise SystemExit(f"Video file or folder not found: {args.video}")
+
+    # Folder mode: data/raw_videos/<exercise>/<video> -> data/poses/<exercise>/<video>.csv
+    videos = list(find_videos(args.video))
+    if not videos:
+        raise SystemExit(f"No videos found in {args.video}/<exercise>/")
+    output_dir = args.output or poses_dir
+    for n, (exercise, video) in enumerate(videos, start=1):
+        output = output_dir / exercise / f"{video.stem}.csv"
+        if output.exists():  # lets you stop and re-run without redoing finished videos
+            print(f"[{n}/{len(videos)}] {exercise}/{video.name}: already done, skipping")
+            continue
+        frames, detected = save_poses(video, output, args.model)
+        rate = 100 * detected / max(frames, 1)
+        warning = "  <-- LOW, check this video" if rate < 80 else ""
+        print(f"[{n}/{len(videos)}] {exercise}/{video.name}: "
+              f"person in {detected}/{frames} frames ({rate:.0f}%){warning}")
+    print(f"Done. CSVs are in {output_dir}")
 
 
 if __name__ == "__main__":

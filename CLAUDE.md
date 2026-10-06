@@ -35,7 +35,18 @@ to confirm before moving on, and let them run git commands themselves.
   1.4 step 2 part 2 written: `normalize_keypoints` in features.py (aspect fix, hip-centered,
   torso-scaled; tests in tests/test_normalize.py), CSV now has image_width/height columns,
   `src/plot_poses.py` plots raw vs normalized y. User ran both: plot shows 5 clear wrist reps.
-  Phase 1.4 complete. Not yet committed.
+  Phase 1.4 complete, committed (c571f5e).
+  1.5 (current): chose Kaggle "Workout/Exercises Video" (hasyimabdillah). Downloaded to
+  `C:\Users\Favi\Downloads\archive.zip` (4.6 GB, 22 exercise folders, 652 videos, mp4 + mov;
+  squat 29, push-up 56, barbell biceps curl 62). 5 random videos each copied to
+  `data/raw_videos/{squat,pushup,curl}/`. `src/explore_videos.py` summarizes them: all readable,
+  all landscape (720p/1080p), FPS mixed 24/30, very short (1.8–21.9 s, 1.5 min total).
+  `extract_poses.py` now also takes a folder (→ `data/poses/<exercise>/<video>.csv`, skips done
+  ones, flags <80% detection). User ran it: all 15 extracted (85–100% detected). But detection %
+  hides problems: curl_58 hips vis 0.11 (likely close-up, breaks hip-based normalization),
+  curl_27 elbows 0.48. Later: filter videos by key-joint visibility, not just detection.
+  Next: user views curl_58 with pose_demo, commits; then Phase 1 is done. Alternatives noted: UCF101 (6.5 GB), RepCount (rep labels,
+  for later counting evaluation), Mendeley multi-view 7-exercise good/bad-form set.
   Remaining Phase 1: 1.5 public dataset.
 - Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).
