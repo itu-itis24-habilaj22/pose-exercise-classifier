@@ -70,7 +70,12 @@ to confirm before moving on, and let them run git commands themselves.
   Step 6a: `src/train_classifier.py` baseline Random Forest on mean/std/min/max per value
   (264 features), StratifiedGroupKFold(3) by video; split 1 = 88 train / 45 test videos.
   My test run: 98.4% test acc (curl recall 0.95, 4 curls→squat); 3 splits 98.4/98.4/91.3
-  (mean 96.1). Saves models/exercise_classifier_rf.joblib (trained on all). Not run by user,
-  not committed. Next: look at the 91% split / errors, then 6b LSTM (needs torch install).
+  (mean 96.1). Saves models/exercise_classifier_rf.joblib. Committed (b3466db). Errors are
+  mostly curl<->squat (both standing), spread over videos; split 3 has only 18 train squats.
+  Per-video voting would fix almost all → idea for live demo.
+  Step 6b: torch 2.14.1+cpu installed (no NVIDIA GPU), requirements.txt updated.
+  `src/train_lstm.py`: LSTM64→Dropout→Dense32→3, 40 epochs, Adam, class weights, same splits.
+  My run (~30 s): split 1 98.4% (7 squat→curl), splits 98.4/99.1/92.2 (mean 96.6) ≈ baseline.
+  Saves models/exercise_classifier_lstm.pt. Not run by user, not committed.
 - Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).
