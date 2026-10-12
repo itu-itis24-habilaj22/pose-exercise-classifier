@@ -17,6 +17,8 @@ to confirm before moving on, and let them run git commands themselves.
 - `src/rep_counter.py`: `RepCounter` with down/up angle thresholds; `EXERCISES` config
   (squat, pushup, curl).
 - `src/counter_demo.py`: live rep counter; prints the angle range seen on exit.
+- `src/copy_dataset.py`: copies squat/push-up/curl folders from the Kaggle zip to data/raw_videos.
+- `src/check_quality.py`: per-video detection/visibility check → data/poses/quality.csv (`keep`).
 - Tests: `python -m pytest` (tests/conftest.py adds `src/` to the path).
 
 ## Progress
@@ -48,5 +50,14 @@ to confirm before moving on, and let them run git commands themselves.
   Next: user views curl_58 with pose_demo, commits; then Phase 1 is done. Alternatives noted: UCF101 (6.5 GB), RepCount (rep labels,
   for later counting evaluation), Mendeley multi-view 7-exercise good/bad-form set.
   Remaining Phase 1: 1.5 public dataset.
+- Phase 2.2 (current, exercise classifier): roadmap (in ~/Downloads) wants 3 exercises, ≥20
+  videos each, 30-frame pose sequences, 70/30 split. Kaggle set has no jumping jacks, so user
+  chose squat/pushup/curl. `src/copy_dataset.py` copied all of them from the zip: squat 29,
+  pushup 56, curl 62 (147 total) in data/raw_videos/. Not committed.
+  All 147 extracted to data/poses/<exercise>/ (min 47 frames/video). 14 flagged bad (low
+  detection or hip/shoulder/key-joint visibility < 0.5); user confirmed squat_28 (no knees) and
+  curl_41 (arms hidden at start) visually. `src/check_quality.py` writes data/poses/quality.csv
+  with a `keep` column (expected kept: squat 26, pushup 55, curl 52). Not committed.
+  Next: user runs check_quality.py, commits; then build 30-frame sequences from kept videos.
 - Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).
