@@ -19,6 +19,7 @@ to confirm before moving on, and let them run git commands themselves.
 - `src/counter_demo.py`: live rep counter; prints the angle range seen on exit.
 - `src/copy_dataset.py`: copies squat/push-up/curl folders from the Kaggle zip to data/raw_videos.
 - `src/check_quality.py`: per-video detection/visibility check → data/poses/quality.csv (`keep`).
+- `src/make_sequences.py`: kept videos → 30-frame pose windows in data/sequences.npz.
 - Tests: `python -m pytest` (tests/conftest.py adds `src/` to the path).
 
 ## Progress
@@ -57,7 +58,13 @@ to confirm before moving on, and let them run git commands themselves.
   All 147 extracted to data/poses/<exercise>/ (min 47 frames/video). 14 flagged bad (low
   detection or hip/shoulder/key-joint visibility < 0.5); user confirmed squat_28 (no knees) and
   curl_41 (arms hidden at start) visually. `src/check_quality.py` writes data/poses/quality.csv
-  with a `keep` column (expected kept: squat 26, pushup 55, curl 52). Not committed.
-  Next: user runs check_quality.py, commits; then build 30-frame sequences from kept videos.
+  with a `keep` column (kept: squat 26, pushup 55, curl 52). Committed and pushed.
+  `src/make_sequences.py` (+ tests/test_sequences.py): kept videos → normalized x,y (66/frame),
+  30-frame windows, stride 15, NaN windows skipped → data/sequences.npz (X, y, video, classes).
+  Train/test must be split BY VIDEO (windows overlap). Not committed.
+  Fixed after first run: normalize_keypoints now uses ONE torso scale per video (90th pct) —
+  per-frame scale exploded on front-view push-ups (values up to 146); fill_short_gaps
+  interpolates ≤5-frame gaps (push-up_30 had 0 windows). Result: curl 321, pushup 587,
+  squat 435 = 1343 sequences, max |value| 4.5. Next: user reruns, commits; then train.
 - Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).

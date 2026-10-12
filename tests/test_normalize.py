@@ -30,6 +30,17 @@ def test_hips_centered_and_torso_is_one_unit():
     assert np.linalg.norm(shoulder_center[:2]) == pytest.approx(1.0)
 
 
+def test_one_scale_per_video_when_torso_looks_short():
+    # Frame 1 is the same pose with the torso pointing at the camera (looks 10x shorter).
+    keypoints = np.concatenate([make_pose(offset=[0.5, 0.5], scale=1.0)] * 2)
+    keypoints[1, [LEFT_SHOULDER, RIGHT_SHOULDER], 1] = -0.03
+    result = normalize_keypoints(keypoints)
+    # Hips don't move between the frames, so their normalized position must not either.
+    np.testing.assert_allclose(result[0, LEFT_HIP], result[1, LEFT_HIP])
+    # The foreshortened shoulders end up close to the hips instead of exploding.
+    assert np.abs(result[1, :, :2]).max() < 2
+
+
 def test_missing_frames_stay_missing():
     keypoints = np.full((2, 33, 4), np.nan)
     assert np.isnan(normalize_keypoints(keypoints)).all()

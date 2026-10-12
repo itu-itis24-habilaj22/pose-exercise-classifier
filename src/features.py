@@ -60,6 +60,10 @@ def normalize_keypoints(keypoints, aspect_ratio=1.0):
     Each frame is then centered on the middle of the hips and divided by the torso
     length (hips to shoulders), so the hip center is at (0, 0, 0) and the shoulders
     are about 1 unit away. Visibility is kept unchanged.
+
+    The torso length is one value for the whole video (its 90th percentile), not one per
+    frame: when the torso points at the camera (e.g. a push-up filmed from the front) it
+    looks almost zero long in the image, and dividing by that would blow the pose up.
     """
     points = keypoints[..., :3].copy()
     points[..., 0] *= aspect_ratio
@@ -69,7 +73,9 @@ def normalize_keypoints(keypoints, aspect_ratio=1.0):
     shoulder_center = (points[:, LEFT_SHOULDER] + points[:, RIGHT_SHOULDER]) / 2
     # Torso length in the image plane only: z is a rough estimate.
     torso = np.linalg.norm((shoulder_center - hip_center)[:, :2], axis=1)
-    torso[torso == 0] = np.nan  # avoid dividing by zero on a broken detection
+    scale = np.nanpercentile(torso, 90) if not np.isnan(torso).all() else np.nan
+    if scale == 0:
+        scale = np.nan  # avoid dividing by zero on a broken detection
 
-    normalized = (points - hip_center[:, None, :]) / torso[:, None, None]
+    normalized = (points - hip_center[:, None, :]) / scale
     return np.concatenate([normalized, keypoints[..., 3:]], axis=-1)
