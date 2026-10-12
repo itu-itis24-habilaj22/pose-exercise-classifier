@@ -20,6 +20,7 @@ to confirm before moving on, and let them run git commands themselves.
 - `src/copy_dataset.py`: copies squat/push-up/curl folders from the Kaggle zip to data/raw_videos.
 - `src/check_quality.py`: per-video detection/visibility check → data/poses/quality.csv (`keep`).
 - `src/make_sequences.py`: kept videos → 30-frame pose windows in data/sequences.npz.
+- `src/train_classifier.py`: baseline Random Forest, split by video, saves to models/.
 - Tests: `python -m pytest` (tests/conftest.py adds `src/` to the path).
 
 ## Progress
@@ -65,6 +66,11 @@ to confirm before moving on, and let them run git commands themselves.
   Fixed after first run: normalize_keypoints now uses ONE torso scale per video (90th pct) —
   per-frame scale exploded on front-view push-ups (values up to 146); fill_short_gaps
   interpolates ≤5-frame gaps (push-up_30 had 0 windows). Result: curl 321, pushup 587,
-  squat 435 = 1343 sequences, max |value| 4.5. Next: user reruns, commits; then train.
+  squat 435 = 1343 sequences, max |value| 4.5. Committed (2e215fc). data/*.npz now git-ignored.
+  Step 6a: `src/train_classifier.py` baseline Random Forest on mean/std/min/max per value
+  (264 features), StratifiedGroupKFold(3) by video; split 1 = 88 train / 45 test videos.
+  My test run: 98.4% test acc (curl recall 0.95, 4 curls→squat); 3 splits 98.4/98.4/91.3
+  (mean 96.1). Saves models/exercise_classifier_rf.joblib (trained on all). Not run by user,
+  not committed. Next: look at the 91% split / errors, then 6b LSTM (needs torch install).
 - Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).

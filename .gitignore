@@ -14,6 +14,7 @@ data/raw_videos/*
 data/poses/*
 data/processed/*
 data/samples/*
+data/*.npz
 !data/**/.gitkeep
 
 # Models (large binaries)
