@@ -20,6 +20,7 @@ def app():
     with app.app_context():
         init_db()
         yield app
+        app.extensions["detection_sessions"].close_all()
         db.session.remove()
         db.drop_all()
 

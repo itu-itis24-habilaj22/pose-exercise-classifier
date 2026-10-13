@@ -201,6 +201,16 @@ class SessionStore:
             session.close()
         return session
 
+    def close_all(self):
+        """Close every session. MediaPipe trackers must be closed explicitly: if Python's
+        garbage collector closes them at a random moment instead, it can deadlock."""
+        with self.lock:
+            sessions = list(self.sessions.values())
+            self.sessions.clear()
+        for session in sessions:
+            with session.lock:
+                session.close()
+
     def _close_idle(self):
         now = time.monotonic()
         for session_id, session in list(self.sessions.items()):

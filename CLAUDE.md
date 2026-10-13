@@ -172,3 +172,12 @@ to confirm before moving on, and let them run git commands themselves.
   multipart "frame", DELETE → summary; client then POSTs /api/history), MAX_CONTENT_LENGTH 2 MB.
   tests/test_detect.py streams push-up_2 / curl_7 / squat_8 frames: correct exercise + reps
   (skips if models missing). 73 tests pass (~40 ms per frame through the API). Not committed.
+- Step 7 committed (aa3e6b3). Step 8: Flask-CORS added (CORS_ORIGINS env, default React dev
+  servers localhost:5173/3000; test), docs/API_DOCUMENTATION.md (all endpoints, errors,
+  detection flow, deployment notes), docs/postman_collection.json (bearer {{token}} auto-saved by
+  Signup/Login scripts; workout_id/session_id variables). Needs pip install flask-cors. Not
+  committed. After this Phase 2B is complete (except free-tier limits, demo videos: Phase 4).
+  Bug found by user (pytest hung >5 min): sessions left open in tests → GC ran PoseLandmarker
+  __del__/close at random time → deadlock. Fix: SessionStore.close_all() (atexit in create_app,
+  and in conftest app teardown). Never rely on GC to close MediaPipe landmarkers. 3 full runs
+  pass (74 tests, ~23 s).

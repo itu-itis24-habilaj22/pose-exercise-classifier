@@ -21,6 +21,7 @@ psycopg[binary]>=3.2   # PostgreSQL driver
 python-dotenv>=1.0     # reads settings from .env
 bcrypt>=4.1            # password hashing
 pyjwt>=2.8             # login tokens
+flask-cors>=4.0        # lets the React website call the API
 
 # Visualization
 matplotlib>=3.8

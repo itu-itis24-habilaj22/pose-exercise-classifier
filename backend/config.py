@@ -20,6 +20,10 @@ class Config:
     BCRYPT_ROUNDS = 12  # cost of hashing a password: higher = slower to crack
     TOKEN_DAYS = 7      # how long a login lasts
     MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # largest accepted request (a camera frame), bytes
+    # Websites allowed to call the API from a browser (comma-separated). Defaults: the
+    # React development servers (Vite and Create React App).
+    CORS_ORIGINS = os.environ.get("CORS_ORIGINS",
+                                  "http://localhost:5173,http://localhost:3000").split(",")
 
 
 class TestConfig(Config):

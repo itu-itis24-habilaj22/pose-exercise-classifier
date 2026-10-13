@@ -7,8 +7,11 @@ Then open http://127.0.0.1:5000/api/health in a browser.
 Create the database tables (once, and after adding new tables):
     flask --app backend.app init-db
 """
+import atexit
+
 import click
 from flask import Flask
+from flask_cors import CORS
 
 from backend import models  # noqa: F401  (registers the tables with SQLAlchemy)
 from backend.config import Config
@@ -25,13 +28,15 @@ def create_app(config=Config):
     if not app.config["SQLALCHEMY_DATABASE_URI"]:
         raise RuntimeError("DATABASE_URL is not set: copy .env.example to .env and fill it in.")
     db.init_app(app)
+    CORS(app, resources={r"/api/*": {"origins": app.config["CORS_ORIGINS"]}})
     app.register_blueprint(health.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(exercises.bp)
     app.register_blueprint(workouts.bp)
     app.register_blueprint(history.bp)
     app.register_blueprint(detection.bp)
-    app.extensions["detection_sessions"] = SessionStore()
+    app.extensions["detection_sessions"] = sessions = SessionStore()
+    atexit.register(sessions.close_all)  # close MediaPipe trackers cleanly on shutdown
 
     @app.cli.command("init-db")
     def init_db_command():
