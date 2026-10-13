@@ -8,7 +8,9 @@
 #   top), after having been below `down`.
 # `joint` is also the joint whose visibility check_quality.py checks.
 EXERCISES = {
-    "squat": {"signal": "angle", "joint": "knee", "down": 100, "up": 160},
+    # In dataset videos (often filmed from the front) standing up only reaches 140-155 deg;
+    # 100/140 counted 13/13 reps on 8 test videos (100/160 counted 8).
+    "squat": {"signal": "angle", "joint": "knee", "down": 100, "up": 140},
     # Push-ups in the dataset often only reach 95-105 deg at the bottom; 110/140 counted
     # 30/30 reps on 5 test videos (90/150 counted 13).
     "pushup": {"signal": "angle", "joint": "elbow", "down": 110, "up": 140},

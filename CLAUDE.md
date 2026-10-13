@@ -53,8 +53,19 @@ to confirm before moving on, and let them run git commands themselves.
   RF 28 ms (n_jobs=1), counting 0.2 ms → 36 ms/frame ≈ 28 fps, meets <100 ms.
   Fixed: classes were saved as np.str_ → torch.load(weights_only) failed; load_sequences now
   returns plain str; added train_lstm.load_lstm(). I replaced models/exercise_classifier_lstm.pt
-  with an identical retrain (same loss). Not committed. Remaining 2A: prediction script
-  (classify + count), model documentation.
+  with an identical retrain (same loss). Committed (65fdbfc).
+  `src/predict.py VIDEO`: one MediaPipe pass (keypoints + every exercise's measure), LSTM
+  votes over 30-frame windows (same preprocessing as training), counts reps for the winner.
+  On the 19 counted push-up/curl videos: exercise 19/19, reps 19/19 videos (final model saw
+  these videos in training, so classification is optimistic). Not committed.
+  PROBLEM: squat counter (knee 100/160) gives 0 reps on dataset squats: standing knee angle
+  often only 140–155, and knee visible in only 11–54% of frames in some (squat_3 11%).
+  Only validated live on the user before. User counts (after re-count of a mix-up):
+  8:1, 9:1, 20:2, 21:2 (tuning) and 3:1, 11:1, 4:4, 6:4, 7:1 (new). Changed squat to 100/140
+  → 13/13 reps on 8 videos. squat_4: someone walks in front, knees invisible 6–10.5 s, counts
+  2 of 4 → excluded like push-up_52 (view blocked), reported as limitation. Not committed.
+  Rep counter overall: squat 13/13, pushup 40/40, curl 18/18 (single person, clear view).
+  Next: model documentation (last Phase 2A item).
   Note: IMAGE-mode detection took ~70 ms/frame (roadmap target <100 ms/frame).
 - The user follows the roadmap: only do the current phase, don't build ahead. Roadmap says to use public datasets before recording our own videos.
 - Roadmap status: Phase 1.1, 1.2 and 1.4 step 1 done; rep counter (Phase 2.1) done early.
