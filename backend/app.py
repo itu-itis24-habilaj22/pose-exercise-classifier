@@ -7,6 +7,7 @@ Then open http://127.0.0.1:5000/api/health in a browser.
 from flask import Flask
 
 from backend.config import Config
+from backend.db import db
 from backend.routes import health
 
 
@@ -14,6 +15,9 @@ def create_app(config=Config):
     """Build the app. Tests pass TestConfig; the real server uses Config."""
     app = Flask(__name__)
     app.config.from_object(config)
+    if not app.config["SQLALCHEMY_DATABASE_URI"]:
+        raise RuntimeError("DATABASE_URL is not set: copy .env.example to .env and fill it in.")
+    db.init_app(app)
     app.register_blueprint(health.bp)
     return app
 

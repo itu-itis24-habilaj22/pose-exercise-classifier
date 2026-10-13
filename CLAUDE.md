@@ -134,3 +134,9 @@ to confirm before moving on, and let them run git commands themselves.
 - Phase 2B step 1: backend/ (app.py create_app factory, config.py Config/TestConfig,
   routes/health.py GET /api/health -> {"status": "ok"}), tests/test_backend.py, flask added to
   requirements.txt. Run: `python -m backend.app`. Flask not yet installed by user; not committed.
+- Phase 2B step 1 committed (8864b65). PostgreSQL 18.6 installed by user (C:\Program Files\
+  PostgreSQL\18, port 5432, user postgres; password only in user's .env). Step 2 written:
+  .env (git-ignored) / .env.example, config.py loads DATABASE_URL via python-dotenv,
+  backend/db.py (Flask-SQLAlchemy), health also checks DB (SELECT 1, 503 if down), TestConfig =
+  sqlite memory. Needs: pip install flask-sqlalchemy "psycopg[binary]" python-dotenv; create
+  DB personal_trainer. User did all: health shows database ok, 24 tests pass. Not committed.

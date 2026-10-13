@@ -16,6 +16,9 @@ torch>=2.2
 
 # Backend (Phase 2B)
 flask>=3.0
+flask-sqlalchemy>=3.1
+psycopg[binary]>=3.2   # PostgreSQL driver
+python-dotenv>=1.0     # reads settings from .env
 
 # Visualization
 matplotlib>=3.8
