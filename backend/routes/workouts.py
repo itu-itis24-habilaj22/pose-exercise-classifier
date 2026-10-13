@@ -12,17 +12,13 @@ from flask import Blueprint, g, jsonify, request
 from backend.auth import login_required
 from backend.db import db
 from backend.models import Exercise, Workout
+from backend.validation import is_whole_number
 
 bp = Blueprint("workouts", __name__, url_prefix="/api/workouts")
 
 MAX_EXERCISES = 20
 MAX_SETS = 20
 MAX_REPS = 200
-
-
-def is_whole_number(value, low, high):
-    # bool is a subclass of int in Python, so exclude it explicitly
-    return isinstance(value, int) and not isinstance(value, bool) and low <= value <= high
 
 
 def parse_workout(data):

@@ -157,3 +157,9 @@ to confirm before moving on, and let them run git commands themselves.
   rejects bools), routes/exercises.py public GET /api/exercises, to_dict on Workout/Exercise,
   tests/test_workouts.py. 50 tests pass. Not committed. Free-tier "10 workouts/month" limit not
   implemented (unclear: plans vs sessions; feature gating is Phase 4D).
+- Step 5 committed (ce7eb18). Step 6 (history/stats) written: routes/history.py POST/GET
+  /api/history (filters exercise, from, to; newest first), GET /api/stats (basic, everyone:
+  totals, reps_this_week, avg form score, per_exercise sessions/total/best_set), GET
+  /api/progress?days=N (premium_required; reps per day per exercise for charts). Shared
+  backend/validation.is_whole_number. ExerciseHistory.to_dict. tests/test_history.py. 65 pass.
+  Not committed. Remaining 2B: /api/detect (ML integration), Postman/API docs.

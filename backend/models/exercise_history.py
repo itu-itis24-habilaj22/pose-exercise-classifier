@@ -19,5 +19,16 @@ class ExerciseHistory(db.Model):
     user = db.relationship("User", back_populates="history")
     exercise = db.relationship("Exercise")
 
+    def to_dict(self):
+        return {
+            "history_id": self.history_id,
+            "exercise": self.exercise.name,
+            "reps_completed": self.reps_completed,
+            "form_score": self.form_score,
+            "date_completed": self.date_completed.isoformat(),
+            "duration": self.duration,
+            "voice_enabled": self.voice_enabled,
+        }
+
     def __repr__(self):
         return f"<ExerciseHistory {self.user_id} {self.exercise_id} {self.reps_completed} reps>"
