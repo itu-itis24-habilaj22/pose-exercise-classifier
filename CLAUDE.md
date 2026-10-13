@@ -140,3 +140,8 @@ to confirm before moving on, and let them run git commands themselves.
   backend/db.py (Flask-SQLAlchemy), health also checks DB (SELECT 1, 503 if down), TestConfig =
   sqlite memory. Needs: pip install flask-sqlalchemy "psycopg[binary]" python-dotenv; create
   DB personal_trainer. User did all: health shows database ok, 24 tests pass. Not committed.
+- Step 2 committed. Step 3 written: backend/models/ (user, exercise, workout, exercise_history;
+  roadmap column names, PKs user_id etc., JSON for workout.exercises and joints_to_track,
+  cascade delete from user), backend/seed.py init_db() (create_all + 3 exercises, idempotent),
+  CLI `flask --app backend.app init-db`, tests/test_models.py. 30 tests pass. No migrations
+  (create_all) for now; consider Flask-Migrate before deploy. Not run on PostgreSQL by user yet.
