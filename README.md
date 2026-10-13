@@ -1,141 +1,85 @@
 # Pose-Based Exercise Classifier and Rep Counter
 
-> Graduation project — [Your Name], [University], [Department], [Year]
-> Supervisor: [Supervisor Name]
+> Graduation project, Istanbul Technical University. Advisor: Prof. Dr. Mehmet Keskinöz.
 
-## Overview
-
-This project uses human pose estimation to **recognize which exercise** a person is doing
-(e.g. squat, push-up, bicep curl, lunge, jumping jack) from video, and to **count repetitions**
-automatically.
-
-**Pipeline:**
+The machine-learning core of a **Personal Trainer AI**: from a video of one person
+exercising, it recognizes the exercise (**squat, push-up, biceps curl**) and counts the
+repetitions. A web app (Flask backend, React frontend) will be built on top of it.
 
 ```
-Video ──► Pose estimation ──► Keypoint features ──► Exercise classifier ──► Rep counter ──► Output
-          (MediaPipe)         (joint angles,         (e.g. RF / LSTM)       (angle-based
-                               normalized coords)                            state machine)
+video ─► pose detection ─► normalized keypoints ─► LSTM (30-frame sequences) ─► exercise
+          (MediaPipe)                                                              │
+             └──────────► joint angle / wrist height per frame ─► rep counter ◄────┘ ─► reps
 ```
-
-## Goals
-
-- [ ] Extract 2D/3D body keypoints from exercise videos
-- [ ] Engineer pose features (joint angles, normalized coordinates, velocities)
-- [ ] Train a classifier to identify the exercise type
-- [ ] Count repetitions per exercise using joint-angle thresholds / peak detection
-- [ ] Run in real time on webcam input
-- [ ] Evaluate accuracy (classification) and counting error (MAE)
-
-## Supported Exercises
-
-| Exercise     | Key joint(s) for counting | Status |
-|--------------|---------------------------|--------|
-| Squat        | Knee angle                | TODO   |
-| Push-up      | Elbow angle               | TODO   |
-| Bicep curl   | Elbow angle               | TODO   |
-| Lunge        | Knee angle                | TODO   |
-| Jumping jack | Shoulder / hip angle      | TODO   |
-
-## Project Structure
-
-```
-pose-exercise-classifier/
-├── data/
-│   ├── raw_videos/      # Original exercise videos (not tracked by git)
-│   ├── poses/           # Extracted keypoints per video (.csv / .npy)
-│   └── processed/       # Feature datasets ready for training
-├── models/              # Saved trained models (.pkl / .h5 / .pt)
-├── notebooks/           # Jupyter notebooks for exploration and experiments
-├── src/
-│   ├── extract_poses.py # Video → keypoints
-│   ├── features.py      # Keypoints → features (angles, etc.)
-│   ├── train.py         # Train the exercise classifier
-│   ├── rep_counter.py   # Repetition counting logic
-│   └── app.py           # Real-time webcam / video demo
-├── tests/               # Unit tests
-├── requirements.txt
-└── README.md
-```
-
-## Installation
-
-Requires **Python 3.10–3.12** (MediaPipe may not yet support newer versions).
-
-```bash
-git clone https://github.com/<your-username>/pose-exercise-classifier.git
-cd pose-exercise-classifier
-
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS / Linux
-source .venv/bin/activate
-
-pip install -r requirements.txt
-```
-
-## Usage
-
-```bash
-# 1. Extract poses from videos
-python src/extract_poses.py --input data/raw_videos --output data/poses
-
-# 2. Train the classifier
-python src/train.py --data data/processed --output models/
-
-# 3. Run the real-time demo
-python src/app.py --model models/classifier.pkl --source 0   # 0 = webcam
-```
-
-## Dataset
-
-- **Source:** [e.g. self-recorded / Kaggle / InfiniteRep / Fitness-AQA]
-- **Size:** [N videos, M exercises, K subjects]
-- **Labels:** exercise class + ground-truth rep count per video
-
-Raw videos are not committed to the repository. Download/placement instructions: [link or notes].
-
-## Methodology
-
-### Pose Estimation
-[Describe the pose model, e.g. MediaPipe Pose — 33 landmarks, and why you chose it.]
-
-### Feature Engineering
-[Joint angles, normalization by torso length, temporal windows, etc.]
-
-### Classification
-[Model(s) tried, window size, train/val/test split strategy (split by subject!).]
-
-### Repetition Counting
-[e.g. state machine over joint angle: "up" → "down" → "up" = 1 rep, with hysteresis thresholds.]
 
 ## Results
 
-| Model          | Accuracy | F1-score |
-|----------------|----------|----------|
-| [Model A]      | –        | –        |
-| [Model B]      | –        | –        |
+| | Result | Roadmap target |
+|---|---|---|
+| Exercise classification (LSTM, unseen videos, 3 splits by video) | **96.6%** accuracy | > 80% |
+| Rep counting (single person, clear view) | squat 13/13, push-up 40/40, curl 18/18 | > 95% |
+| Speed (pose + classification + counting, laptop CPU) | **36 ms per frame** (≈ 28 fps) | < 100 ms |
 
-| Exercise   | Rep count MAE |
-|------------|---------------|
-| Squat      | –             |
-| Push-up    | –             |
+Details (data, methods, evaluation and limitations): [docs/ML_MODEL_DOCS.md](docs/ML_MODEL_DOCS.md).
 
-## Demo
+## Installation
 
-[Add a GIF or screenshot here.]
+Developed with **Python 3.12** (MediaPipe may not support newer versions).
 
-## Future Work
+```powershell
+git clone https://github.com/itu-itis24-habilaj22/pose-exercise-classifier.git
+cd pose-exercise-classifier
+python -m venv .venv
+.venv\Scripts\activate
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install -r requirements.txt
+```
 
-- [Form/posture correction feedback]
-- [More exercises]
-- [Mobile deployment]
+The MediaPipe model `models/pose_landmarker_full.task` must be downloaded separately
+(MediaPipe Pose Landmarker, full).
+
+## Usage
+
+```powershell
+python src/predict.py data/raw_videos/squat/squat_6.MOV      # exercise + reps for a video
+python src/counter_demo.py --exercise squat                  # live rep counter (webcam)
+python src/pose_demo.py                                      # live skeleton (webcam)
+python -m pytest                                             # tests
+```
+
+To rebuild the dataset and retrain the models, see
+[How to reproduce](docs/ML_MODEL_DOCS.md#7-how-to-reproduce).
+
+## Dataset
+
+Kaggle "Workout/Exercises Video" (hasyimabdillah): 147 videos of squats, push-ups and
+barbell biceps curls, 133 kept after a pose quality check. Videos and extracted poses are
+not committed to the repository (`data/` is git-ignored).
+
+## Project structure
+
+```
+src/
+  pose_demo.py           live pose detection and skeleton drawing
+  counter_demo.py        live rep counter (webcam or video)
+  predict.py             full pipeline: video -> exercise + reps
+  features.py            joint angles, wrist height, keypoint normalization
+  rep_counter.py         rep counting with two thresholds; per-exercise settings
+  copy_dataset.py        copy the three exercises from the Kaggle zip
+  extract_poses.py       video -> keypoints CSV (one row per frame)
+  check_quality.py       per-video detection / visibility check
+  make_sequences.py      kept videos -> 30-frame training sequences
+  train_classifier.py    Random Forest baseline
+  train_lstm.py          LSTM classifier (used model)
+  benchmark_speed.py     time per frame of each pipeline step
+  explore_videos.py, plot_poses.py, opencv_*_basics.py   exploration and learning scripts
+tests/                   unit tests (pytest)
+docs/ML_MODEL_DOCS.md    model documentation
+models/                  trained models (git-ignored)
+data/                    videos, poses, sequences (git-ignored)
+```
 
 ## References
 
 1. Bazarevsky et al., *BlazePose: On-device Real-time Body Pose Tracking*, 2020.
-2. [Add more]
-
-## License
-
-[MIT / other — choose one]
+2. Hochreiter and Schmidhuber, *Long Short-Term Memory*, Neural Computation, 1997.

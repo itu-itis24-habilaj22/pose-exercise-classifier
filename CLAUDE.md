@@ -28,7 +28,13 @@ to confirm before moving on, and let them run git commands themselves.
 - Step 10 done: angle + rep counter code written, tests passing. NOT yet committed.
 - Step 11 done: live squat test counted 5/5 (knee range 31–170 deg); thresholds 100/160 kept.
 - Step 12 done: step 10/11 work committed and pushed (4901a6c).
-- ROADMAP CHANGED (2026-10-12): now ~/Downloads/FINAL_GRADUATION_PROJECT_ROADMAP.md — a
+- FINAL ROADMAP (2026-10-13): ~/Downloads/FINAL_ROADMAP_v2_COMPLETE.md supersedes all earlier
+  ones. Same phases plus: curls officially the 3rd exercise; freemium (free/premium tiers,
+  Stripe in 4D); live voice guidance (Web Speech API, Phase 3D); schema adds
+  subscription_tier, stripe_customer_id, joints_to_track, voice_enabled. New 2A items:
+  "handle different speeds", "handle partial visibility", "optimize for mobile inference",
+  deliverable "training notebook". Still says Keras .h5 (user chose PyTorch).
+- Previous roadmap (2026-10-12): ~/Downloads/FINAL_GRADUATION_PROJECT_ROADMAP.md — a
   full-stack "Personal Trainer AI" (Flask + PostgreSQL backend, React frontend, deploy). Advisor:
   Prof. Dr. Mehmet Keskinöz. Phase 2A = ML (rep counter >95% on push-ups; classifier pushup/
   squat/burpee, 30+ videos each, >80%; save model, <100 ms/frame, prediction script, model docs).
@@ -66,7 +72,8 @@ to confirm before moving on, and let them run git commands themselves.
   2 of 4 → excluded like push-up_52 (view blocked), reported as limitation. Committed (f220d1e).
   Rep counter overall: squat 13/13, pushup 40/40, curl 18/18 (single person, clear view).
   `docs/ML_MODEL_DOCS.md` written (data, preprocessing, models, results, counter, speed,
-  limitations, reproduce). Not committed. README.md is still the outdated template.
+  limitations, reproduce). Committed (127ba7a). README.md rewritten for the real project
+  (results, install, usage, structure). Not committed.
   After this, Phase 2A is complete; next is Phase 2B (Flask backend).
   Note: IMAGE-mode detection took ~70 ms/frame (roadmap target <100 ms/frame).
 - The user follows the roadmap: only do the current phase, don't build ahead. Roadmap says to use public datasets before recording our own videos.
@@ -119,3 +126,8 @@ to confirm before moving on, and let them run git commands themselves.
   Saves models/exercise_classifier_lstm.pt. Not run by user, not committed.
 - Later (Phase 2.2+): build the exercise classifier (collect labeled videos,
   extract poses to `data/poses`, features, train in `notebooks/`, save to `models/`).
+- Decisions 2026-10-13: 26 squats OK; PyTorch; "mobile inference" = fast server-side inference
+  (done, 36 ms); backend goes in THIS repo as `backend/` next to `src/`. Training notebook
+  `notebooks/04_classifier_training.ipynb` (reuses src functions; executed, outputs saved;
+  same numbers as scripts) closes 2A. train_model has verbose= and model.loss_history. Not
+  committed (with README). PHASE 2A DONE. Next: Phase 2B step 1, minimal Flask app in backend/.

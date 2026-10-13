@@ -44,8 +44,11 @@ class ExerciseLSTM(nn.Module):
         return self.head(last_hidden[-1])
 
 
-def train_model(X, y, n_classes, epochs=EPOCHS, seed=SEED):
-    """Train a fresh LSTM on X (sequences, frames, features) and labels y."""
+def train_model(X, y, n_classes, epochs=EPOCHS, seed=SEED, verbose=True):
+    """Train a fresh LSTM on X (sequences, frames, features) and labels y.
+
+    The mean training loss of every epoch is kept in `model.loss_history`.
+    """
     torch.manual_seed(seed)
     model = ExerciseLSTM(X.shape[2], n_classes)
     # Weight each exercise by 1 / (its number of sequences), like class_weight="balanced".
@@ -57,6 +60,7 @@ def train_model(X, y, n_classes, epochs=EPOCHS, seed=SEED):
     X_t, y_t = torch.from_numpy(X), torch.from_numpy(y).long()
     generator = torch.Generator().manual_seed(seed)
     model.train()
+    model.loss_history = []
     for epoch in range(epochs):
         order = torch.randperm(len(X_t), generator=generator)
         total_loss = 0.0
@@ -67,7 +71,8 @@ def train_model(X, y, n_classes, epochs=EPOCHS, seed=SEED):
             loss.backward()
             optimizer.step()
             total_loss += loss.item() * len(batch)
-        if (epoch + 1) % 10 == 0:
+        model.loss_history.append(total_loss / len(X_t))
+        if verbose and (epoch + 1) % 10 == 0:
             print(f"  epoch {epoch + 1:3d}/{epochs}  loss {total_loss / len(X_t):.4f}")
     return model
 
