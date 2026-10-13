@@ -28,8 +28,21 @@ to confirm before moving on, and let them run git commands themselves.
 - Step 10 done: angle + rep counter code written, tests passing. NOT yet committed.
 - Step 11 done: live squat test counted 5/5 (knee range 31–170 deg); thresholds 100/160 kept.
 - Step 12 done: step 10/11 work committed and pushed (4901a6c).
-- The user follows a roadmap (GRADUATION_PROJECT_ROADMAP.md): only do the current phase, don't
-  build ahead. Roadmap says to use public datasets before recording our own videos.
+- ROADMAP CHANGED (2026-10-12): now ~/Downloads/FINAL_GRADUATION_PROJECT_ROADMAP.md — a
+  full-stack "Personal Trainer AI" (Flask + PostgreSQL backend, React frontend, deploy). Advisor:
+  Prof. Dr. Mehmet Keskinöz. Phase 2A = ML (rep counter >95% on push-ups; classifier pushup/
+  squat/burpee, 30+ videos each, >80%; save model, <100 ms/frame, prediction script, model docs).
+  Phase 2B = Flask API + DB + auth + /api/detect. Phase 3 React, Phase 4 features/deploy.
+  The old roadmap (GRADUATION_PROJECT_ROADMAP.md) is superseded.
+  User decided: keep pushup/squat/curl (not burpees); 26 squat videos is enough (no more data).
+  User decided: keep PyTorch (.pt), not Keras .h5. Push-up rep counter test: user's eye counts
+  43:1, 2:2, 49:3, 29:5, 54:19 (9+10) = 30. Old 90/150 got 13; rep bottoms are often 95–105°.
+  Changed pushup to 110/140 → 30/30 (simulated on recorded angles). Validated on 5 new videos
+  (23:1, 25:2, 32:5, 4:2 all correct = 10/10). push-up_52 has TWO people (one stops at ~7 s);
+  num_poses=1 tracking jumps between them → 14 vs 25; excluded as out of scope (single-user
+  app). Total 40/40 on 9 single-person videos. Not committed. Next: same test for curls (50/150).
+  Note: IMAGE-mode detection took ~70 ms/frame (roadmap target <100 ms/frame).
+- The user follows the roadmap: only do the current phase, don't build ahead. Roadmap says to use public datasets before recording our own videos.
 - Roadmap status: Phase 1.1, 1.2 and 1.4 step 1 done; rep counter (Phase 2.1) done early.
   1.3 done: `src/opencv_image_basics.py` (resize, gray, Canny) and `src/opencv_video_basics.py`
   (frame count, FPS, pause) both tested by the user on webcam and on files in `data/samples/`

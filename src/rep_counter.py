@@ -4,7 +4,9 @@
 # A rep = angle drops below `down_angle`, then rises back above `up_angle`.
 EXERCISES = {
     "squat": {"joint": "knee", "down_angle": 100, "up_angle": 160},
-    "pushup": {"joint": "elbow", "down_angle": 90, "up_angle": 150},
+    # Push-ups in the dataset often only reach 95-105 deg at the bottom; 110/140 counted
+    # 30/30 reps on 5 test videos (90/150 counted 13).
+    "pushup": {"joint": "elbow", "down_angle": 110, "up_angle": 140},
     "curl": {"joint": "elbow", "down_angle": 50, "up_angle": 150},
 }
 
