@@ -48,7 +48,12 @@ to confirm before moving on, and let them run git commands themselves.
   keys now signal/joint/down/up(/auto_start); make_counter(); counter_demo.measure().
   Headless check with real pipeline: curls 11/11, push-ups still 40/40. 22 tests pass.
   Validated by user on new curls 11:1, 50:2, 5:2, 37:1, 17:1 → 7/7. Curls total 18/18.
-  Not committed yet. Remaining 2A: inference speed (<100 ms/frame), prediction script
+  Committed (c0b765b).
+  Speed: `src/benchmark_speed.py` (default push-up_54, 720p): pose 33.5 ms, LSTM 2.6 ms,
+  RF 28 ms (n_jobs=1), counting 0.2 ms → 36 ms/frame ≈ 28 fps, meets <100 ms.
+  Fixed: classes were saved as np.str_ → torch.load(weights_only) failed; load_sequences now
+  returns plain str; added train_lstm.load_lstm(). I replaced models/exercise_classifier_lstm.pt
+  with an identical retrain (same loss). Not committed. Remaining 2A: prediction script
   (classify + count), model documentation.
   Note: IMAGE-mode detection took ~70 ms/frame (roadmap target <100 ms/frame).
 - The user follows the roadmap: only do the current phase, don't build ahead. Roadmap says to use public datasets before recording our own videos.

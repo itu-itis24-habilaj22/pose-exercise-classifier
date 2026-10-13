@@ -78,6 +78,15 @@ def predict(model, X):
         return model(torch.from_numpy(X)).argmax(dim=1).numpy()
 
 
+def load_lstm(path):
+    """Load a model saved by this script; returns (model, class names)."""
+    saved = torch.load(path)
+    model = ExerciseLSTM(saved["n_features"], len(saved["classes"]))
+    model.load_state_dict(saved["state_dict"])
+    model.eval()
+    return model, saved["classes"]
+
+
 def main():
     parser = argparse.ArgumentParser(description="Train the LSTM exercise classifier")
     parser.add_argument("--data", type=Path, default=PROJECT_ROOT / "data" / "sequences.npz")

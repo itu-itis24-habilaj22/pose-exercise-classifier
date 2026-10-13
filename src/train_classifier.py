@@ -25,7 +25,7 @@ SEED = 42
 
 def load_sequences(path):
     data = np.load(path)
-    return data["X"], data["y"], data["video"], list(data["classes"])
+    return data["X"], data["y"], data["video"], [str(name) for name in data["classes"]]
 
 
 def split_by_video(y, videos, n_splits=3, seed=SEED):
