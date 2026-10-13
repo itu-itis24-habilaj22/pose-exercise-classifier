@@ -48,6 +48,28 @@ def joint_angle(world_landmarks, image_landmarks, joint):
     return best
 
 
+def wrist_height(image_landmarks):
+    """How high the wrists are: 0 = at hip level, 1 = at shoulder level (can go past both).
+
+    Uses only the image y positions (both wrists averaged, as when holding a bar), so it
+    doesn't depend on MediaPipe's depth estimate, which is poor when the forearm moves
+    toward the camera (a curl filmed from the front). Dividing by the hip-to-shoulder
+    height makes it independent of distance to the camera.
+    Returns (height, visibility), where visibility is the average of the six points: in
+    a curl the hands cover the thighs at the bottom and the bar covers the hips at the top,
+    so some points always look hidden even though their positions are estimated fine.
+    """
+    points = [LEFT_WRIST, RIGHT_WRIST, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_HIP, RIGHT_HIP]
+    visibility = sum(image_landmarks[i].visibility or 0 for i in points) / len(points)
+    y = {i: image_landmarks[i].y for i in points}
+    wrist = (y[LEFT_WRIST] + y[RIGHT_WRIST]) / 2
+    shoulder = (y[LEFT_SHOULDER] + y[RIGHT_SHOULDER]) / 2
+    hip = (y[LEFT_HIP] + y[RIGHT_HIP]) / 2
+    if shoulder == hip:
+        return 0.0, 0.0
+    return (wrist - hip) / (shoulder - hip), visibility
+
+
 def normalize_keypoints(keypoints, aspect_ratio=1.0):
     """Make poses comparable no matter where the person stands or how far away they are.
 

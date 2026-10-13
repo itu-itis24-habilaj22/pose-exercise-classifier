@@ -40,7 +40,16 @@ to confirm before moving on, and let them run git commands themselves.
   Changed pushup to 110/140 → 30/30 (simulated on recorded angles). Validated on 5 new videos
   (23:1, 25:2, 32:5, 4:2 all correct = 10/10). push-up_52 has TWO people (one stops at ~7 s);
   num_poses=1 tracking jumps between them → 14 vs 25; excluded as out of scope (single-user
-  app). Total 40/40 on 9 single-person videos. Not committed. Next: same test for curls (50/150).
+  app). Total 40/40 on 9 single-person videos. Committed (13b772c).
+  Curl test: user counts 23:1, 53:3, 18:1, 7:2, 52:4; elbow angle 50/150 counted 0 everywhere
+  (front view → MediaPipe 3D elbow only reaches 80–95°). Switched curls to
+  features.wrist_height (2D: 0 = hips, 1 = shoulders, avg visibility of 6 points), thresholds
+  0.3/0.6, counted when bar reaches the top, auto_start (first value sets stage). EXERCISES
+  keys now signal/joint/down/up(/auto_start); make_counter(); counter_demo.measure().
+  Headless check with real pipeline: curls 11/11, push-ups still 40/40. 22 tests pass.
+  Validated by user on new curls 11:1, 50:2, 5:2, 37:1, 17:1 → 7/7. Curls total 18/18.
+  Not committed yet. Remaining 2A: inference speed (<100 ms/frame), prediction script
+  (classify + count), model documentation.
   Note: IMAGE-mode detection took ~70 ms/frame (roadmap target <100 ms/frame).
 - The user follows the roadmap: only do the current phase, don't build ahead. Roadmap says to use public datasets before recording our own videos.
 - Roadmap status: Phase 1.1, 1.2 and 1.4 step 1 done; rep counter (Phase 2.1) done early.
