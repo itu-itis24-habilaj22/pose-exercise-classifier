@@ -131,3 +131,6 @@ to confirm before moving on, and let them run git commands themselves.
   `notebooks/04_classifier_training.ipynb` (reuses src functions; executed, outputs saved;
   same numbers as scripts) closes 2A. train_model has verbose= and model.loss_history. Not
   committed (with README). PHASE 2A DONE. Next: Phase 2B step 1, minimal Flask app in backend/.
+- Phase 2B step 1: backend/ (app.py create_app factory, config.py Config/TestConfig,
+  routes/health.py GET /api/health -> {"status": "ok"}), tests/test_backend.py, flask added to
+  requirements.txt. Run: `python -m backend.app`. Flask not yet installed by user; not committed.
