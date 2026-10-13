@@ -63,9 +63,11 @@ to confirm before moving on, and let them run git commands themselves.
   Only validated live on the user before. User counts (after re-count of a mix-up):
   8:1, 9:1, 20:2, 21:2 (tuning) and 3:1, 11:1, 4:4, 6:4, 7:1 (new). Changed squat to 100/140
   → 13/13 reps on 8 videos. squat_4: someone walks in front, knees invisible 6–10.5 s, counts
-  2 of 4 → excluded like push-up_52 (view blocked), reported as limitation. Not committed.
+  2 of 4 → excluded like push-up_52 (view blocked), reported as limitation. Committed (f220d1e).
   Rep counter overall: squat 13/13, pushup 40/40, curl 18/18 (single person, clear view).
-  Next: model documentation (last Phase 2A item).
+  `docs/ML_MODEL_DOCS.md` written (data, preprocessing, models, results, counter, speed,
+  limitations, reproduce). Not committed. README.md is still the outdated template.
+  After this, Phase 2A is complete; next is Phase 2B (Flask backend).
   Note: IMAGE-mode detection took ~70 ms/frame (roadmap target <100 ms/frame).
 - The user follows the roadmap: only do the current phase, don't build ahead. Roadmap says to use public datasets before recording our own videos.
 - Roadmap status: Phase 1.1, 1.2 and 1.4 step 1 done; rep counter (Phase 2.1) done early.
