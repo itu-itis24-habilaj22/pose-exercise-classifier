@@ -17,9 +17,13 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-change-me")
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     TESTING = False
+    BCRYPT_ROUNDS = 12  # cost of hashing a password: higher = slower to crack
+    TOKEN_DAYS = 7      # how long a login lasts
 
 
 class TestConfig(Config):
     TESTING = True
+    SECRET_KEY = "test-only-secret-key-at-least-32-bytes"  # independent of .env
+    BCRYPT_ROUNDS = 4  # fast hashing so the tests stay quick
     # A throwaway SQLite database in memory: fast, needs no PostgreSQL.
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"

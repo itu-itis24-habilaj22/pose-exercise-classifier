@@ -1,22 +1,9 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from backend.app import create_app
-from backend.config import TestConfig
 from backend.db import db
 from backend.models import Exercise, ExerciseHistory, User, Workout
 from backend.seed import init_db
-
-
-@pytest.fixture
-def app():
-    """App with a fresh, empty in-memory database for each test."""
-    app = create_app(TestConfig)
-    with app.app_context():
-        init_db()
-        yield app
-        db.session.remove()
-        db.drop_all()
 
 
 def make_user(name="faby"):

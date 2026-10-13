@@ -23,5 +23,15 @@ class User(db.Model):
     history = db.relationship("ExerciseHistory", back_populates="user",
                               cascade="all, delete-orphan")
 
+    def to_dict(self):
+        """What the API may show about a user (never the password hash or Stripe id)."""
+        return {
+            "user_id": self.user_id,
+            "username": self.username,
+            "email": self.email,
+            "subscription_tier": self.subscription_tier,
+            "created_at": self.created_at.isoformat(),
+        }
+
     def __repr__(self):
         return f"<User {self.username}>"

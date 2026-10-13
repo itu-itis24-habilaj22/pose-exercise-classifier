@@ -13,7 +13,7 @@ from flask import Flask
 from backend import models  # noqa: F401  (registers the tables with SQLAlchemy)
 from backend.config import Config
 from backend.db import db
-from backend.routes import health
+from backend.routes import auth, health
 from backend.seed import init_db
 
 
@@ -25,6 +25,7 @@ def create_app(config=Config):
         raise RuntimeError("DATABASE_URL is not set: copy .env.example to .env and fill it in.")
     db.init_app(app)
     app.register_blueprint(health.bp)
+    app.register_blueprint(auth.bp)
 
     @app.cli.command("init-db")
     def init_db_command():

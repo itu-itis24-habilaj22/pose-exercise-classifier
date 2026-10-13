@@ -145,3 +145,10 @@ to confirm before moving on, and let them run git commands themselves.
   cascade delete from user), backend/seed.py init_db() (create_all + 3 exercises, idempotent),
   CLI `flask --app backend.app init-db`, tests/test_models.py. 30 tests pass. No migrations
   (create_all) for now; consider Flask-Migrate before deploy. Not run on PostgreSQL by user yet.
+- Step 3 committed (745fac1); user ran init-db on PostgreSQL (3 exercises). Step 4 (auth) written:
+  backend/auth.py (bcrypt hash/check, PyJWT HS256 token sub=user_id, TOKEN_DAYS=7,
+  @login_required sets g.user, @premium_required 403), routes/auth.py (POST signup 201/400/409,
+  POST login 200/401 same msg, GET me), User.to_dict(), BCRYPT_ROUNDS 12 (tests 4), shared
+  app/client fixtures moved to tests/conftest.py, tests/test_auth.py. Needs pip install bcrypt
+  pyjwt (done). 39 tests pass; TestConfig has its own 32+ byte SECRET_KEY. User ran signup
+  against the real server (result not yet seen). Not committed.
