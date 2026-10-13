@@ -13,7 +13,7 @@ from flask import Flask
 from backend import models  # noqa: F401  (registers the tables with SQLAlchemy)
 from backend.config import Config
 from backend.db import db
-from backend.routes import auth, health
+from backend.routes import auth, exercises, health, workouts
 from backend.seed import init_db
 
 
@@ -26,6 +26,8 @@ def create_app(config=Config):
     db.init_app(app)
     app.register_blueprint(health.bp)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(exercises.bp)
+    app.register_blueprint(workouts.bp)
 
     @app.cli.command("init-db")
     def init_db_command():

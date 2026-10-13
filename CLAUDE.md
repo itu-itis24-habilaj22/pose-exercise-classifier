@@ -151,4 +151,9 @@ to confirm before moving on, and let them run git commands themselves.
   POST login 200/401 same msg, GET me), User.to_dict(), BCRYPT_ROUNDS 12 (tests 4), shared
   app/client fixtures moved to tests/conftest.py, tests/test_auth.py. Needs pip install bcrypt
   pyjwt (done). 39 tests pass; TestConfig has its own 32+ byte SECRET_KEY. User ran signup
-  against the real server (result not yet seen). Not committed.
+  against the real server: user 1 created. Committed (c1b8d86).
+- Step 5 (workouts) written: routes/workouts.py CRUD (login_required, own_workout → 404 for
+  other users' ids, validation: name 1–100, 1–20 exercises from DB names, sets 1–20, reps 1–200,
+  rejects bools), routes/exercises.py public GET /api/exercises, to_dict on Workout/Exercise,
+  tests/test_workouts.py. 50 tests pass. Not committed. Free-tier "10 workouts/month" limit not
+  implemented (unclear: plans vs sessions; feature gating is Phase 4D).

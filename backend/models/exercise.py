@@ -15,5 +15,16 @@ class Exercise(db.Model):
     # What the rep counter tracks, e.g. {"signal": "angle", "joint": "knee"}.
     joints_to_track = db.Column(db.JSON, nullable=False)
 
+    def to_dict(self):
+        return {
+            "exercise_id": self.exercise_id,
+            "name": self.name,
+            "display_name": self.display_name,
+            "demo_video_url": self.demo_video_url,
+            "instructions": self.instructions,
+            "target_reps": self.target_reps,
+            "difficulty": self.difficulty,
+        }
+
     def __repr__(self):
         return f"<Exercise {self.name}>"

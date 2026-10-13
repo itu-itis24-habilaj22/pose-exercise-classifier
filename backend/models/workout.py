@@ -18,5 +18,14 @@ class Workout(db.Model):
 
     user = db.relationship("User", back_populates="workouts")
 
+    def to_dict(self):
+        return {
+            "workout_id": self.workout_id,
+            "name": self.name,
+            "exercises": self.exercises,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }
+
     def __repr__(self):
         return f"<Workout {self.name}>"
