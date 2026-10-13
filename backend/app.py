@@ -13,7 +13,8 @@ from flask import Flask
 from backend import models  # noqa: F401  (registers the tables with SQLAlchemy)
 from backend.config import Config
 from backend.db import db
-from backend.routes import auth, exercises, health, history, workouts
+from backend.ml_engine import SessionStore
+from backend.routes import auth, detection, exercises, health, history, workouts
 from backend.seed import init_db
 
 
@@ -29,6 +30,8 @@ def create_app(config=Config):
     app.register_blueprint(exercises.bp)
     app.register_blueprint(workouts.bp)
     app.register_blueprint(history.bp)
+    app.register_blueprint(detection.bp)
+    app.extensions["detection_sessions"] = SessionStore()
 
     @app.cli.command("init-db")
     def init_db_command():

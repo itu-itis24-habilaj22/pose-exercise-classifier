@@ -163,3 +163,12 @@ to confirm before moving on, and let them run git commands themselves.
   /api/progress?days=N (premium_required; reps per day per exercise for charts). Shared
   backend/validation.is_whole_number. ExerciseHistory.to_dict. tests/test_history.py. 65 pass.
   Not committed. Remaining 2B: /api/detect (ML integration), Postman/API docs.
+- Step 6 committed (c8358cc). Step 7 (/api/detect) written: backend/ml_engine.py (adds src/ to
+  sys.path; LSTM loaded once lazily; DetectionSession per user set: own MediaPipe VIDEO-mode
+  landmarker, monotonic timestamps, counters for all 3 exercises via src measure(), recent
+  keypoints deque 150 for normalization scale, gaps ≤5 repeat last pose, classify every 15
+  frames, last 5 votes; SessionStore max 20, idle 10 min, in-process → prod must run 1 process
+  with threads), routes/detection.py (POST sessions {exercise?}, POST sessions/<id>/frames
+  multipart "frame", DELETE → summary; client then POSTs /api/history), MAX_CONTENT_LENGTH 2 MB.
+  tests/test_detect.py streams push-up_2 / curl_7 / squat_8 frames: correct exercise + reps
+  (skips if models missing). 73 tests pass (~40 ms per frame through the API). Not committed.

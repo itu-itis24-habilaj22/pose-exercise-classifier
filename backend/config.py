@@ -19,6 +19,7 @@ class Config:
     TESTING = False
     BCRYPT_ROUNDS = 12  # cost of hashing a password: higher = slower to crack
     TOKEN_DAYS = 7      # how long a login lasts
+    MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # largest accepted request (a camera frame), bytes
 
 
 class TestConfig(Config):
