@@ -181,3 +181,7 @@ to confirm before moving on, and let them run git commands themselves.
   __del__/close at random time → deadlock. Fix: SessionStore.close_all() (atexit in create_app,
   and in conftest app teardown). Never rely on GC to close MediaPipe landmarkers. 3 full runs
   pass (74 tests, ~23 s).
+- Step 8 committed (f021243); pyrightconfig.json (extraPaths src) committed (56d91b5), Pylance
+  warnings gone. PHASE 2 (2A + 2B) COMPLETE as of 2026-10-13. Deferred by roadmap: free-tier
+  limits + Stripe (4D), demo videos (4A), form score (4A), schema docs (4F). Before deploy (4E):
+  Flask-Migrate, gunicorn 1 process + threads. Next: Phase 3A (React setup, login/signup, dashboard).
