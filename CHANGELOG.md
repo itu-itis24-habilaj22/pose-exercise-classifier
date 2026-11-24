@@ -16,13 +16,15 @@ Phase R: bringing the work of Phases 1 and 2 into a branch and pull request work
 - `main` is protected by a ruleset: changes only through pull requests, all three checks must
   pass, no force pushes or deletion. (WBS-R.2)
 - Requirement IDs in `docs/REQUIREMENTS.md`, the work breakdown in `docs/WBS.md`, a pull
-  request template, `CONTRIBUTING.md` and this changelog. (WBS-R.3)
+  request template, `CONTRIBUTING.md` and this changelog. (WBS-R.3, #2)
 
 ### Changed
 - `requirements.txt` only lists what the app needs to run. pytest, Jupyter, matplotlib and
   seaborn moved to `requirements-dev.txt`. (WBS-R.1, #1)
 - The CI workflow file was renamed from `tests.yml` to `ci.yml`. (WBS-R.1, #1)
 - The repository is now public. (WBS-R.2)
+- Test files are named by requirement ID, for example `test_auth.py` is now
+  `test_fr06_auth.py`. The tests themselves did not change. (WBS-R.4)
 
 ### Fixed
 - Five issues reported by ruff: import order, an unused import in the training notebook and

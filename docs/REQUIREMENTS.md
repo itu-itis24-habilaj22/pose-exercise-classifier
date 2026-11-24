@@ -52,26 +52,27 @@ repository, so they are skipped on GitHub. WBS-R.5 will make them run in CI.
 
 | ID | Test file | Tests | What they check |
 |---|---|---|---|
-| FR-01 | `tests/test_normalize.py` | 4 | Hips at the origin and torso as one unit, same pose anywhere in the image gives the same result, one scale per video, missing frames stay missing |
-| FR-02 | `tests/test_sequences.py` | 5 | Window count and shape, short gaps filled, long gaps left missing, windows with missing frames skipped, video shorter than one window |
-| FR-03 | `tests/test_rep_counting.py` | 13 | Joint angles (2D and 3D), wrist height, full reps counted, half reps not counted, wobble at the bottom counts once, auto start for curls, a working counter for every exercise |
-| FR-03, FR-04, FR-10 | `tests/test_detect.py` | 8 | Detection needs login, bad input rejected, sessions are private, summary at the end; one push-up, one curl and one squat video streamed frame by frame must give the right exercise and rep count (skipped in CI) |
-| FR-05 | `tests/test_backend.py` | 3 | Health endpoint, unknown URL gives 404, CORS only allows the React dev server |
-| FR-06, NFR-04 | `tests/test_auth.py` | 9 | Signup and login, password stored hashed, bad data and duplicates rejected, invalid, foreign and expired tokens rejected, premium-only access |
-| FR-07 | `tests/test_models.py` | 6 | New users are free tier, unique emails, workouts and history belong to a user and are deleted with them, the 3 exercises are seeded once |
-| FR-08 | `tests/test_workouts.py` | 11 | Create, list, get, update and delete; validation; login needed; users can't see or change each other's workouts; public exercise list |
-| FR-09 | `tests/test_history.py` | 15 | Save and list history, filters, validation, stats (also for a new user), progress per day for premium users only, users only see their own history |
+| FR-01 | `tests/test_fr01_normalize.py` | 4 | Hips at the origin and torso as one unit, same pose anywhere in the image gives the same result, one scale per video, missing frames stay missing |
+| FR-02 | `tests/test_fr02_sequences.py` | 5 | Window count and shape, short gaps filled, long gaps left missing, windows with missing frames skipped, video shorter than one window |
+| FR-03 | `tests/test_fr03_rep_counting.py` | 13 | Joint angles (2D and 3D), wrist height, full reps counted, half reps not counted, wobble at the bottom counts once, auto start for curls, a working counter for every exercise |
+| FR-03, FR-04, FR-10 | `tests/test_fr10_detection.py` | 8 | Detection needs login, bad input rejected, sessions are private, summary at the end; one push-up, one curl and one squat video streamed frame by frame must give the right exercise and rep count (skipped in CI) |
+| FR-05 | `tests/test_fr05_health.py` | 3 | Health endpoint, unknown URL gives 404, CORS only allows the React dev server |
+| FR-06, NFR-04 | `tests/test_fr06_auth.py` | 9 | Signup and login, password stored hashed, bad data and duplicates rejected, invalid, foreign and expired tokens rejected, premium-only access |
+| FR-07 | `tests/test_fr07_models.py` | 6 | New users are free tier, unique emails, workouts and history belong to a user and are deleted with them, the 3 exercises are seeded once |
+| FR-08 | `tests/test_fr08_workouts.py` | 11 | Create, list, get, update and delete; validation; login needed; users can't see or change each other's workouts; public exercise list |
+| FR-09 | `tests/test_fr09_history.py` | 15 | Save and list history, filters, validation, stats (also for a new user), progress per day for premium users only, users only see their own history |
 
 ### Known gaps
 
 - FR-02: the split by video is done in `train_classifier.split_by_video`, which has no unit
   test yet.
-- FR-04: the classifier is only tested through `test_detect.py`, so CI never checks it. A
-  separate classifier test is planned in WBS-R.5.
+- FR-04: the classifier is only tested through `test_fr10_detection.py`, so CI never
+  checks it. A separate classifier test is planned in WBS-R.5.
 - NFR-01 to NFR-03 are measured by scripts (`train_lstm.py`, `predict.py`,
   `benchmark_speed.py`), not by automated tests. NFR-03 becomes a test in WBS-4.5.
 - NFR-04 "no secrets in the repository" is kept by `.gitignore` (`.env` is never committed),
   not by a test.
 
-In WBS-R.4 the test files get renamed with their requirement ID (for example
-`test_auth.py` becomes `test_fr06_auth.py`), and this table will be updated.
+Since WBS-R.4 every test file name starts with the ID of the requirement it mainly covers
+(`test_fr06_auth.py` tests FR-06). Before that the files were named by topic, for example
+`test_auth.py`; git keeps their history under the new names (`git log --follow`).
