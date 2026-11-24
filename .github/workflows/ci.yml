@@ -1,0 +1,81 @@
+# Checks every push to main and every pull request on GitHub's computers.
+# Three separate jobs, each one a required check before a PR can be merged:
+#   lint             - ruff: code style and simple bugs
+#   test             - pytest, fails if test coverage drops below the minimum
+#   dependency-scan  - pip-audit: packages with known security problems
+# Results: the "Actions" tab, and the checks list at the bottom of each pull request.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04  # a fixed version, so an OS upgrade can't break the run by surprise
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install ruff
+        run: pip install "ruff>=0.6"
+
+      - name: Run ruff (settings in pyproject.toml)
+        run: ruff check .
+
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip  # reuse downloaded packages between runs
+
+      - name: Install system libraries needed by OpenCV and MediaPipe
+        run: sudo apt-get update && sudo apt-get install -y libgl1 libegl1 libgles2
+
+      - name: Install Python packages
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only PyTorch (much smaller than the default GPU build)
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements-dev.txt
+
+      # The detection tests skip here (models/ and the videos are not in git), so the
+      # minimum is the coverage measured without them: 54%. Raise it in WBS-R.5.
+      - name: Run the tests with a coverage minimum
+        run: python -m pytest -v --cov --cov-report=term-missing --cov-fail-under=54
+
+  dependency-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      # Only the packages the app needs to run (requirements.txt), not the dev tools.
+      - name: Install Python packages
+        run: |
+          python -m pip install --upgrade pip setuptools
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt pip-audit
+
+      # torch is skipped ("not found on PyPI") because the CPU build comes from
+      # PyTorch's own server; that is a warning, not a failure.
+      - name: Scan for known vulnerabilities
+        run: pip-audit

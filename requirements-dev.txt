@@ -1,0 +1,18 @@
+# Everything needed to develop and test the project (not needed to run the app).
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements-dev.txt
+-r requirements.txt
+
+# Testing and code quality
+pytest>=8.0
+pytest-cov>=5.0      # test coverage
+ruff>=0.6            # linter (code style and simple bugs)
+pip-audit>=2.7       # checks packages for known security problems
+
+# Notebooks
+jupyter>=1.0
+ipykernel>=6.29
+
+# Plots (exploration scripts and the training notebook)
+matplotlib>=3.8
+seaborn>=0.13

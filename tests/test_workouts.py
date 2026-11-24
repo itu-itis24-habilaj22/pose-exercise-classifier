@@ -45,7 +45,10 @@ def test_create_list_get(client, faby):
 
 def test_update_and_delete(client, faby):
     workout_id = create(client, faby).get_json()["workout"]["workout_id"]
-    new_plan = {"name": "Leg day", "exercises": [{"exercise": "squat", "sets": 4, "target_reps": 8}]}
+    new_plan = {
+        "name": "Leg day",
+        "exercises": [{"exercise": "squat", "sets": 4, "target_reps": 8}],
+    }
     updated = client.put(f"/api/workouts/{workout_id}", json=new_plan, headers=faby)
     assert updated.status_code == 200
     assert updated.get_json()["workout"]["name"] == "Leg day"
