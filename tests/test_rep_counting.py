@@ -1,7 +1,15 @@
 import pytest
 
-from features import (LEFT_HIP, LEFT_SHOULDER, LEFT_WRIST, RIGHT_HIP, RIGHT_SHOULDER,
-                      RIGHT_WRIST, calculate_angle, wrist_height)
+from features import (
+    LEFT_HIP,
+    LEFT_SHOULDER,
+    LEFT_WRIST,
+    RIGHT_HIP,
+    RIGHT_SHOULDER,
+    RIGHT_WRIST,
+    calculate_angle,
+    wrist_height,
+)
 from rep_counter import EXERCISES, RepCounter, make_counter
 
 

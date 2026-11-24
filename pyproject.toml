@@ -1,0 +1,23 @@
+# Settings for the development tools (ruff, pytest, coverage).
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# E = style errors, F = likely bugs (unused imports, undefined names), I = import order
+select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["backend", "src"]
+# Learning scripts and interactive demos (webcam windows): not tested, so not counted.
+omit = [
+    "src/opencv_*_basics.py",
+    "src/explore_videos.py",
+    "src/plot_poses.py",
+    "src/pose_demo.py",
+    "src/counter_demo.py",
+]
