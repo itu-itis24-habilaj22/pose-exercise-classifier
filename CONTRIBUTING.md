@@ -66,7 +66,7 @@ python -m pytest --cov --cov-report=term-missing
 pip-audit
 ```
 
-The detection tests in `tests/test_detect.py` need the trained model and the dataset videos.
+The detection tests in `tests/test_fr10_detection.py` need the trained model and the dataset videos.
 They are skipped when those files are missing, which is the case on GitHub for now.
 
 ## Review

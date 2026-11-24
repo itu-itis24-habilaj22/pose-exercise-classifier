@@ -52,8 +52,8 @@ Phase 2B, backend:
 | R.0 | Nov 24 | none | Tag `v0.2.0-baseline` and GitHub Release | Done |
 | R.1 | Nov 24 | `ci/wbs-r.1-ci-gates` | CI split into lint, test (coverage gate) and dependency-scan; dev requirements; ruff fixes | Done (PR #1) |
 | R.2 | Nov 24 | none | Repo made public; ruleset protects `main` (PR required, 3 checks, no force push) | Done |
-| R.3 | Nov 24 to Dec 6 | `docs/wbs-r.3-requirements-wbs` | Requirements, WBS, PR template, contributing guide, changelog | In progress |
-| R.4 | Dec 7 to Dec 13 | `test/wbs-r.4-tests-by-requirement` | Rename test files with requirement IDs | Planned |
+| R.3 | Nov 24 | `docs/wbs-r.3-requirements-wbs` | Requirements, WBS, PR template, contributing guide, changelog | Done (PR #2) |
+| R.4 | Nov 24 | `test/wbs-r.4-tests-by-requirement` | Rename test files with requirement IDs | In progress |
 | R.5 | Dec 14 to Dec 20 | `test/wbs-r.5-ml-tests-in-ci` | Run the detection tests in CI, add a classifier test, raise the coverage gate | Planned |
 | R.6 | Dec 21 to Dec 24 | `chore/wbs-r.6-cleanup` | Move learning scripts out of `src/`, pin versions, trim the progress log | Planned |
 | R.7 | Dec 27 | none | Tag and release `v0.2.1` | Planned |
